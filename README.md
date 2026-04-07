@@ -11,7 +11,6 @@
  
  Ziel dieses Projekts ist es, diese Anforderungen in einer **praxisnahen, aber reduzierten Cloud-Architektur**
  nachzubilden und dabei gängige Cloud- und DevOps-Technologien einzusetzen.
- Test
  
  ---
  
