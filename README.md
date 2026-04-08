@@ -20,7 +20,7 @@
  
  - Fahrzeuge senden anonymisierte Sensordaten (Position, Temperatur, Fahrbahnglätte)
  - Die Daten werden über eine skalierbare AWS-Architektur verarbeitet
- - Gefahrenlagen werden aggregiert und anderen Fahrzeugen bereitgestellt
+ - Gefahrenlagen werden zusammengeführt und anderen Fahrzeugen bereitgestellt
  - Die Infrastruktur ist vollständig als **Infrastructure as Code (Terraform)** definiert
  - Anwendungen laufen containerisiert mit **Docker**
  - Deployments erfolgen automatisiert über **GitHub Actions (CI/CD)**
@@ -33,8 +33,8 @@
  
  - Fahrzeugsimulatoren senden Sensordaten an eine API
  - Die API schreibt die Daten in einen Streaming-Dienst
- - Eine Verarbeitungskomponente aggregiert relevante Ereignisse
- - Ergebnisse werden in Datenbanken und Storage-Systemen persistiert
+ - Eine Verarbeitungskomponente führt relevante Ereignisse zusammen
+ - Ergebnisse werden in Datenbanken und Storage-Systemen gespeichert
  - Andere Fahrzeuge können Warnungen abrufen
  
  Die Architektur ist hochverfügbar, skalierbar und orientiert sich an typischen AWS-Best-Practices.
@@ -49,7 +49,7 @@
  
  **Container & Runtime**
  - Docker
- - Amazon ECS (Fargate oder EC2-backed)
+ - Amazon ECS (Fargate/EC2-backed)
  
  **CI/CD**
  - GitHub Actions
