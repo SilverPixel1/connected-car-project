@@ -7,6 +7,8 @@
  *.tfstate.*
  crash.log
  terraform.tfvars
+ .terraform.lock.hcl
+ *.tfvars.json
  
  # ======================
  # AWS / Secrets
