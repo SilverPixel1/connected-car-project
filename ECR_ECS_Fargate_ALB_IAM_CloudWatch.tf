@@ -1,10 +1,13 @@
 #######################################################################################################################
-#Build the Infrastructure for the Project: ECR, ECS, Fargate(EC2)
+#Build the Infrastructure for the Project: ECR, ECS, Fargate(EC2), IAM, CloudWatch, ALB
 #######################################################################################################################
 
 # ECR speichert Docker Images, wie Docker HUB, privat in AWS dadurch werden die Images sicher verwaltet und können direkt in AWS Diensten wie ECS oder Lambda verwendet werden
 # ECS ist der Container Orchestrator von AWS er startet, skaliert und verwaltet Container
 # Fargate ist der Compute Service von AWS, für serverless und günstiger (EC2 wäre für vollständige Kontrolle)
+# ALB ist der Application Load Balancer von AWS, damit die Ingest API über den ALB erreichbar ist und der ALB die Anfragen an die ECS Tasks weiterleiten kann
+# CloudWatch ist der Monitoring Service von AWS (überwacht die Infrastruktur, sammelt Logs, erstellt Alarme, etc.)
+# IAM ist der Identity and Access Management Service von AWS (verwalten von Benutzern, Rollen, Berechtigungen, etc.)  
 
 
 ###############################
@@ -79,10 +82,6 @@ output "processor_ecr_url" {
 output "simulation_ecr_url" {
   value = aws_ecr_repository.simulation.repository_url
 }
-
-
-
-
 
 ####################################################
 #ECS Cluster auf Fargate (Serverless Compute Service für Container, keine Updates/Patches verwalten, kosten nur wenn Containerlaufen)
