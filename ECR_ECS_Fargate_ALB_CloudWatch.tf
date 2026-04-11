@@ -103,35 +103,6 @@ resource "aws_ecs_cluster" "connected_car_cluster" {
     } 
 }
 
-#IAM Excecution Role für ECS Tasks, damit die Container auf AWS Ressourcen zugreifen können (z.B. S3, DynamoDB, CloudWatch Logs)
-resource "aws_iam_role" "ecs_task_execution_role" { 
-  name = "${var.project_name}-ecs-task-execution-role"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect = "Allow"
-        Principal = {
-          Service = "ecs-tasks.amazonaws.com"
-        }
-        Action = "sts:AssumeRole"
-      }
-    ]
-  })
-
-  tags = {
-    Name        = "${var.project_name}-ecs-task-execution-role"
-    Environment = "Development"
-    Project     = "var.project_name"
-    ManagedBy   = "Terraform"
-  }
-}
-
-resource "aws_iam_role_policy_attachment" "ecs_task_execution_role_policy" {
-  role       = aws_iam_role.ecs_task_execution_role.name
-  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
-}
 
 #CloudWatch Logs Gruppe für ECS Tasks, damit die Container Logs in CloudWatch Logs schreiben können
 resource "aws_cloudwatch_log_group" "ecs_tasks_log_group" {
