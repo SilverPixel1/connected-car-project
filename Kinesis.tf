@@ -3,7 +3,7 @@
 #######################################################################################################################
 
 resource "aws_kinesis_stream" "sensor_data" {
-    name             = "${var.project_name}-sensor-data-stream"
+    name             = "${var.project_name}-sensor-data"
     shard_count      = 1
     retention_period = 24
 
@@ -12,7 +12,7 @@ resource "aws_kinesis_stream" "sensor_data" {
     }
 
     tags = {
-      Name        = "${var.project_name}-sensor-data-stream"
+      Name        = "${var.project_name}-sensor-data"
       Environment = "Development"
       Project     = var.project_name
     }
