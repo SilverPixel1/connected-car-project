@@ -52,8 +52,8 @@ resource "aws_ecr_repository" "processor" {
 
 }
 
-resource "aws_ecr_repository" "simulation" {
-  name                 = "${var.project_name}-simulation"
+resource "aws_ecr_repository" "simulator" {
+  name                 = "${var.project_name}-simulator"
   image_tag_mutability = "MUTABLE"
   
   image_scanning_configuration {
@@ -61,7 +61,7 @@ resource "aws_ecr_repository" "simulation" {
   }
 
     tags = {
-        Name        = "${var.project_name}-simulation"
+        Name        = "${var.project_name}-simulator"
         Environment = "Development"
         Project     = "var.project_name"
     }         
@@ -79,8 +79,8 @@ output "processor_ecr_url" {
   value = aws_ecr_repository.processor.repository_url
 }   
 
-output "simulation_ecr_url" {
-  value = aws_ecr_repository.simulation.repository_url
+output "simulator_ecr_url" {
+  value = aws_ecr_repository.simulator.repository_url
 }
 
 ####################################################
@@ -216,6 +216,8 @@ resource "aws_lb_target_group" "ingest_api_target_group" {
   port     = 8080
   protocol = "HTTP"
   vpc_id   = aws_vpc.connected_car_vpc.id
+  target_type = "ip" # Da wir Fargate verwenden, müssen wir den Target Type auf "ip" setzen, damit der ALB die IP-Adressen der ECS Tasks als Ziele verwenden kann  
+  
 
   health_check {
     path                = "/health"
@@ -338,7 +340,7 @@ resource "aws_ecs_task_definition" "simulation_task" {
   container_definitions = jsonencode([
     {
       name      = "simulation-container"
-      image     = "${aws_ecr_repository.simulation.repository_url}:latest"
+      image     = "${aws_ecr_repository.simulator.repository_url}:latest"
       essential = true
       logConfiguration = {
         logDriver = "awslogs"
