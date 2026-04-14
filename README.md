@@ -61,20 +61,8 @@
  
  ---
  
- ## Projektstruktur
-text
-connected-car-project/
-├── infra/                 # Terraform Infrastruktur
-│   ├── vpc/
-│   ├── ecs/
-│   ├── kinesis/
-│   ├── s3/
-│   ├── dynamodb/
-│   └── iam/
-│
-├── app/                   # Applikationen (Docker)
-│   ├── car-simulator/
-│   ├── ingest-api/
-│   └── processor/
-│
-└── .github/workflows/     # CI/CD Pipeline
+## 🏗️ Connected Car Cloud Plattform – Architektur
+
+Dieses Diagramm zeigt den End-to-End Datenfluss und die Infrastruktur:
+
+![Architektur Diagramm](docs/architecture.png)
