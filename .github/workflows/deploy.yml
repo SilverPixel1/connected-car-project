@@ -10,43 +10,71 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
-    steps: 
+    steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
+
+      - name: Debug folder structure
+        run: |
+          pwd
+          ls -la
+          ls -la App
+          ls -la App/ingest-api
+          ls -la App/processor
+          ls -la App/simulator
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Login to Amazon ECR
-        uses: aws-actions/amazon-ecr-login@v1
+      - name: Verify AWS identity
+        run: aws sts get-caller-identity
 
-      - name: Build & Push ingest-api Image
+      - name: Login to Amazon ECR
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build ingest-api
         run: |
+          set -euxo pipefail
           cd App/ingest-api
-          docker buildx build --platform linux/amd64 -t ingest-api:latest .
+          docker build -t ingest-api:latest .
+
+      - name: Push ingest-api
+        run: |
+          set -euxo pipefail
           docker tag ingest-api:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/connected-car-ingest-api:latest
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/connected-car-ingest-api:latest
 
-      - name: Build & Push processor Image
+      - name: Build processor
         run: |
+          set -euxo pipefail
           cd App/processor
-          docker buildx build --platform linux/amd64 -t processor:latest .
+          docker build -t processor:latest .
+
+      - name: Push processor
+        run: |
+          set -euxo pipefail
           docker tag processor:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/connected-car-processor:latest
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/connected-car-processor:latest
 
-      - name: Build & Push simulator Image
+      - name: Build simulator
         run: |
+          set -euxo pipefail
           cd App/simulator
-          docker buildx build --platform linux/amd64 -t simulator:latest .
+          docker build -t simulator:latest .
+
+      - name: Push simulator
+        run: |
+          set -euxo pipefail
           docker tag simulator:latest ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/connected-car-simulator:latest
           docker push ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.${{ secrets.AWS_REGION }}.amazonaws.com/connected-car-simulator:latest
 
       - name: Force new ECS Deployment (ingest-api)
         run: |
+          set -euxo pipefail
           aws ecs update-service \
             --cluster connected-car-cluster \
             --service connected-car-ingest-api \
@@ -54,6 +82,7 @@ jobs:
 
       - name: Force new ECS Deployment (processor)
         run: |
+          set -euxo pipefail
           aws ecs update-service \
             --cluster connected-car-cluster \
             --service connected-car-processor \
@@ -61,7 +90,10 @@ jobs:
 
       - name: Force new ECS Deployment (simulator)
         run: |
+          set -euxo pipefail
           aws ecs update-service \
             --cluster connected-car-cluster \
             --service connected-car-simulator \
             --force-new-deployment
+
+
