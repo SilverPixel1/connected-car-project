@@ -122,7 +122,7 @@ resource "aws_iam_policy" "dynamodb_rw" {
 }
 
 resource "aws_iam_role_policy_attachment" "processor_dynamodb_policy" {
-    role       = aws_iam_role.ecs_task_execution_role.name
+    role       = aws_iam_role.ecs_task_role.name
     policy_arn = aws_iam_policy.dynamodb_rw.arn
   
 }
